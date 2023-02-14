@@ -100,6 +100,7 @@ const gameboardGraphicController = (() => {
 
     const updateScreen = () => {
         boardDiv.textContent = '';
+        console.log(game.getActivePlayer());
 
         gameboard.getBoard().forEach((row, rowIndex) => {
             row.forEach((cell, columnIndex) => {
@@ -197,6 +198,10 @@ function checkHorizontals() {
             sameValue += 1;         
         }
     }
+
+    if (sameValue === 3) {
+        announceWinner();
+    }
 }
 
 function checkVerticals() {
@@ -206,12 +211,14 @@ function checkVerticals() {
 
     for (let i = 0; i < boardCheck.length; i++) {
 
+        console.log("same value: " + sameValue);
         if (sameValue === 3) {
             announceWinner();
             break;
         }
 
         sameValue = 0;
+        firstValue = ''
 
         for (let j = 0; j < boardCheck.length; j++) {
             
@@ -226,9 +233,13 @@ function checkVerticals() {
                 break;
             }
 
-            sameValue += 1;
-            console.log(sameValue);         
+            sameValue += 1;          
         }
+    }
+
+    // check for last loop
+    if (sameValue === 3) {
+        announceWinner();
     }
 }
 
