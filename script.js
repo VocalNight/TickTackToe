@@ -100,11 +100,15 @@ const gameboardGraphicController = (() => {
     
                 buttonDiv.dataset.column = columnIndex;
                 buttonDiv.dataset.row = rowIndex;
-                buttonDiv.textContent = cell.getValue();
+                buttonDiv.textContent = cell.getValue() === undefined ? '' : cell.getValue();;
                 boardDiv.appendChild(buttonDiv);
             })
         })
 
+
+        checkDiagonals();
+        checkHorizontals()
+        checkVerticals()
     }
 
     function clickHandlerBoard(e) {
@@ -123,4 +127,88 @@ const gameboardGraphicController = (() => {
 })
 
 gameboardGraphicController();
-console.log(gameboard.getBoard());
+
+
+function checkDiagonals() { 
+    let boardCheck = gameboard.getBoard();
+
+    let firstDiag = boardCheck[0][0].getValue();
+    let secondDiag = boardCheck[0][2].getValue();
+
+
+    if ((firstDiag === 'X' || firstDiag === 'O') && (boardCheck[1][1].getValue() === firstDiag && boardCheck[2][2].getValue() === firstDiag)
+        ||    (secondDiag === 'X' || secondDiag === 'O') && (boardCheck[1][1].getValue() === secondDiag && boardCheck[2][0].getValue() === secondDiag)) {
+            announceWinner();
+    }
+}
+
+
+function announceWinner() {
+    const boardDiv = document.querySelector('.board')
+    boardDiv.textContent = 'Player won'
+}
+
+function checkHorizontals() {
+    let boardCheck = gameboard.getBoard();
+    let firstValue = '';
+    let sameValue = 0;
+
+    for (let i = 0; i < boardCheck.length; i++) {
+
+        if (sameValue === 3) {
+            announceWinner();
+            break;
+        }
+
+        sameValue = 0;
+
+        for (let j = 0; j < boardCheck.length; j++) {
+            
+            if(boardCheck[i][j].getValue() === '') {
+                break;
+            }
+            if (firstValue === '') {
+                firstValue = boardCheck[i][j].getValue();
+            } 
+
+            if (firstValue !== boardCheck[i][j].getValue()) {
+                break;
+            }
+
+            sameValue += 1;         
+        }
+    }
+}
+
+function checkVerticals() {
+    let boardCheck = gameboard.getBoard();
+    let firstValue = '';
+    let sameValue = 0;
+
+    for (let i = 0; i < boardCheck.length; i++) {
+
+        if (sameValue === 3) {
+            announceWinner();
+            break;
+        }
+
+        sameValue = 0;
+
+        for (let j = 0; j < boardCheck.length; j++) {
+            
+            if(boardCheck[j][i].getValue() === '') {
+                break;
+            }
+            if (firstValue === '') {
+                firstValue = boardCheck[j][i].getValue();
+            } 
+
+            if (firstValue !== boardCheck[j][i].getValue()) {
+                break;
+            }
+
+            sameValue += 1;
+            console.log(sameValue);         
+        }
+    }
+}
