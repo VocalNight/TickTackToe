@@ -38,8 +38,17 @@ const gameboard = (() => {
         console.log('hi')
     }
 
+    const resetGame = () => {
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                board[i].push(Cell());
+            }
+        }
+    }
+
     return {
-        getBoard, addSymbol, showBoard
+        getBoard, addSymbol, showBoard, resetGame
     }
 })();
 
@@ -75,7 +84,6 @@ const Game = () => {
 
     const playGame = (row, column) => {
         gameboard.addSymbol(row, column, activePlayer);
-
         setActivePlayer();
     }
     
@@ -105,10 +113,10 @@ const gameboardGraphicController = (() => {
             })
         })
 
-
         checkDiagonals();
         checkHorizontals()
         checkVerticals()
+
     }
 
     function clickHandlerBoard(e) {
@@ -126,7 +134,7 @@ const gameboardGraphicController = (() => {
 
 })
 
-gameboardGraphicController();
+
 
 
 function checkDiagonals() { 
@@ -145,7 +153,18 @@ function checkDiagonals() {
 
 function announceWinner() {
     const boardDiv = document.querySelector('.board')
-    boardDiv.textContent = 'Player won'
+    let player = Game().getActivePlayer();
+    boardDiv.textContent = `${player.username} won`;
+
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'restart game';
+
+    resetButton.addEventListener('click', () => {
+        gameboard.resetGame();
+        gameboardGraphicController();
+    })
+
+    boardDiv.appendChild(resetButton);
 }
 
 function checkHorizontals() {
@@ -212,3 +231,6 @@ function checkVerticals() {
         }
     }
 }
+
+
+gameboardGraphicController();
